@@ -465,7 +465,7 @@
                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="lKs-Ag-0Zn">
                                 <rect key="frame" x="16" y="7" width="83" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Cancle"/>
+                                <state key="normal" title="Cancel"/>
                                 <connections>
                                     <action selector="onCancleButton:" destination="mBG-Cz-rdZ" eventType="touchUpInside" id="O9H-J1-Ylx"/>
                                 </connections>

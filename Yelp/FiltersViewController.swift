@@ -34,7 +34,7 @@ class FiltersViewController: UIViewController, UITableViewDelegate, UITableViewD
         radius = Radius()
         checked = [Bool](count: radius.count, repeatedValue: false)
         categories = yelpCategories()
-       // tableView.registerNib(UINib(nibName: "SeeAllView", bundle: nil), forCellReuseIdentifier: "seeAllCell")
+        tableView.registerNib(UINib(nibName: "SeeAllView", bundle: nil), forCellReuseIdentifier: "seeAllCell")
         self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor()]
         self.navigationController?.navigationBar.barTintColor = UIColor.redColor()
     }
@@ -65,7 +65,7 @@ class FiltersViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 4
+        return 3
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -77,9 +77,14 @@ class FiltersViewController: UIViewController, UITableViewDelegate, UITableViewD
             } else {
                 return 1
             }
-        } else {
-            return categories.count
+        } else if section == 2 {
+            if let expended = isExpended[section] {
+                return expended ? categories.count : 4
+            } else {
+                return 4
+            }
         }
+        return 1
     }
     
     func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
@@ -88,7 +93,7 @@ class FiltersViewController: UIViewController, UITableViewDelegate, UITableViewD
             sectionName = "Deal"
         } else if section == 1 {
             sectionName = "Radius"
-        } else {
+        } else if section == 2 {
             sectionName = "Categories"
         }
         return sectionName
@@ -118,7 +123,14 @@ class FiltersViewController: UIViewController, UITableViewDelegate, UITableViewD
             return cell
         } else {
             let cell = tableView.dequeueReusableCellWithIdentifier("CategoryCell", forIndexPath: indexPath) as! FilterCell
-            cell.categoriesLabel.text = categories[indexPath.row]["name"]
+            if tableView.numberOfRowsInSection(indexPath.section) != categories.count {
+                if indexPath.row == 3 {
+                cell.hidden = true
+                let seeAllCell = tableView.dequeueReusableCellWithIdentifier("seeAllCell")
+                return seeAllCell!
+                }
+            }
+            cell.categoriesLabel.text = self.categories[indexPath.row]["name"]
             cell.delegate = self
             cell.onSwitch.on = switchStates[indexPath.row] ?? false
             return cell
@@ -139,6 +151,17 @@ class FiltersViewController: UIViewController, UITableViewDelegate, UITableViewD
                 isExpended[indexPath.section] = true
             }
             tableView.reloadSections(NSIndexSet(index: indexPath.section), withRowAnimation: UITableViewRowAnimation.Fade)
+        } else if indexPath.section == 2 {
+            tableView.deselectRowAtIndexPath(indexPath, animated: true)
+            if indexPath.row == 3 && tableView.numberOfRowsInSection(indexPath.section) == 4 {
+                if let expanded = isExpended[indexPath.section] {
+                    isExpended[indexPath.section] = !expanded
+                } else {
+                    isExpended[indexPath.section] = true
+                }
+                tableView.reloadSections(NSIndexSet(index: indexPath.section), withRowAnimation: UITableViewRowAnimation.Fade)
+            }
+
         }
     }
     
